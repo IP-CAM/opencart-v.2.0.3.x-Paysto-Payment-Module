@@ -7,7 +7,7 @@
  */
 class ControllerExtensionPaymentPaymaster extends Controller
 {
-    const STATUS_TAX_OFF = 'no_vat';
+    const STATUS_TAX_OFF = 'N';
     const MAX_POS_IN_CHECK = 100;
     const BEGIN_POS_IN_CHECK = 0;
 
@@ -64,12 +64,15 @@ class ControllerExtensionPaymentPaymaster extends Controller
         $data['pos'] = self::BEGIN_POS_IN_CHECK;
         $this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $now = time();
 
         $data['x_login'] = $this->config->get('paysto_x_login');
-        $data['email'] = $order_info['email'];
-        $data['order_id'] = $this->session->data['order_id'];
-        $data['amount'] = number_format($order_info['total'], 2, ".", "");
-        $data['lmi_currency'] = strtoupper($order_info['currency_code']);
+        $data['x_email'] = $order_info['email'];
+        $data['x_fp_sequence'] = $this->session->data['order_id'];
+        $data['x_invoice_num'] = $this->session->data['order_id'];
+        $data['x_amount'] = number_format($order_info['total'], 2, ".", "");
+        $data['x_currency_code'] = strtoupper($order_info['currency_code']);
+        $data['x_fp_timestamp'] = $now;
 
         // Адаптер для последующего получения подписи
         $request = [
@@ -84,9 +87,42 @@ class ControllerExtensionPaymentPaymaster extends Controller
 
         return $this->load->view('extension/payment/paysto', $data);
     }
-
+    
+    
+    /**
+     * Return hash md5 HMAC
+     *
+     * @param $x_login
+     * @param $x_fp_sequence
+     * @param $x_fp_timestamp
+     * @param $x_amount
+     * @param $x_currency_code
+     * @return false|string
+     */
+    private function get_x_fp_hash($x_login, $x_fp_sequence, $x_fp_timestamp, $x_amount, $x_currency_code)
+    {
+        $arr = array($x_login, $x_fp_sequence, $x_fp_timestamp, $x_amount, $x_currency_code);
+        $str = implode('^', $arr);
+        return hash_hmac('md5', $str, $this->paysto_secret);
+    }
+    
+    
+    /**
+     * Return sign with MD5 algoritm
+     *
+     * @param $x_login
+     * @param $x_trans_id
+     * @param $x_amount
+     * @return string
+     */
+    private function get_x_MD5_Hash($x_login, $x_trans_id, $x_amount)
+    {
+        return md5($this->paysto_secret . $x_login . $x_trans_id . $x_amount);
+    }
+    
     /**
      * Логгер
+     *
      * @param $method
      * @param array $data
      * @param string $text
