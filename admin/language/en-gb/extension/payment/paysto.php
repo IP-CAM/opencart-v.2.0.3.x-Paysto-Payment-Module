@@ -14,6 +14,9 @@ $_['text_extension'] 	= 'Payment';
 // Entry
 $_['entry_x_login']  = 'Merchant ID:';
 $_['entry_secret_key']   = 'Secret key:';
+$_['entry_description']   = 'Payment description';
+$_['entry_useOnlyList']   = 'Use callbacks only from servers list';
+$_['entry_serversList']   = 'Server list';
 $_['entry_hash_alg']     = 'Control signature method:';
 $_['entry_test']         = 'Test mode:';
 $_['entry_order_status'] = 'The status of an order after the payment:';

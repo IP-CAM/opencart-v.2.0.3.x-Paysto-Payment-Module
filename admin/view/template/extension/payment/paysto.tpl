@@ -41,6 +41,44 @@
 						<?php } ?>
 					</div>
 
+					<div class="form-group required">
+						<label class="col-sm-2 control-label" for="input-paysto_description"><?php echo $entry_description; ?></label>
+						<div class="col-sm-10">
+							<textarea name="paysto_description" placeholder="<?php echo $entry_description; ?>" id="input-paysto_description" class="form-control"><?php echo $paysto_description; ?></textarea>
+						</div>
+						<?php if ($error_description) { ?>
+						<div class="text-danger"><?php echo $error_description; ?></div>
+						<?php } ?>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-paysto_useOnlyList">
+
+							<?php echo $entry_useOnlyList; ?>
+						</label>
+						<div class="col-sm-10">
+							<input type="hidden" name="paysto_useOnlyList" value="0"/>
+							<input type="checkbox" name="paysto_useOnlyList" id="input-paysto_useOnlyList" value="1" <?php if ($paysto_useOnlyList) { echo 'checked'; } ?>/>
+						</div>
+						<label class="col-sm-2 control-label" for="input-paysto_useOnlyList">
+
+						</label>
+						<?php if ($error_useOnlyList) { ?>
+							<div class="text-danger"><?php echo $error_useOnlyList; ?></div>
+						<?php } ?>
+					</div>
+
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-paysto_serversList"><?php echo $entry_serversList; ?></label>
+						<div class="col-sm-10">
+							<textarea name="paysto_serversList" placeholder="<?php echo $entry_serversList; ?>" id="input-paysto_serversList" class="form-control"><?php echo $paysto_serversList; ?></textarea>
+						</div>
+						<?php if ($error_serversList) { ?>
+							<div class="text-danger"><?php echo $error_serversList; ?></div>
+						<?php } ?>
+					</div>
+
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="input-paysto_order_status_id"><?php echo $entry_order_status; ?></label>
 						<div class="col-sm-10">

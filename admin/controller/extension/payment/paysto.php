@@ -1,8 +1,20 @@
 <?php
-class ControllerExtensionPaymentPaysto extends Controller {
+
+class ControllerExtensionPaymentPaysto extends Controller
+{
     private $error = array();
 
-    public function index() {
+    /** @var array Devafult servers */
+    private $defaultServers = array(
+        '95.213.209.218',
+        '95.213.209.219',
+        '95.213.209.220',
+        '95.213.209.221',
+        '95.213.209.222'
+    );
+
+    public function index()
+    {
         $this->load->language('extension/payment/paysto');
         $this->document->setTitle = $this->language->get('heading_title');
         $this->load->model('setting/setting');
@@ -13,7 +25,7 @@ class ControllerExtensionPaymentPaysto extends Controller {
             $this->session->data['success'] = $this->language->get('text_success');
             $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true));
         }
-   		$data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title'] = $this->language->get('heading_title');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
@@ -21,6 +33,9 @@ class ControllerExtensionPaymentPaysto extends Controller {
 
         $data['entry_x_login'] = $this->language->get('entry_x_login');
         $data['entry_secret_key'] = $this->language->get('entry_secret_key');
+        $data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_useOnlyList'] = $this->language->get('entry_useOnlyList');
+        $data['entry_serversList'] = $this->language->get('entry_serversList');
 
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
@@ -54,6 +69,24 @@ class ControllerExtensionPaymentPaysto extends Controller {
             $data['error_secret_key'] = '';
         }
 
+        if (isset($this->error['description'])) {
+            $data['error_description'] = $this->error['description'];
+        } else {
+            $data['error_description'] = '';
+        }
+
+        if (isset($this->error['useOnlyList'])) {
+            $data['error_useOnlyList'] = $this->error['useOnlyList'];
+        } else {
+            $data['error_useOnlyList'] = '';
+        }
+
+        if (isset($this->error['serversList'])) {
+            $data['error_serversList'] = $this->error['serversList'];
+        } else {
+            $data['error_serversList'] = '';
+        }
+
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true),
@@ -70,9 +103,9 @@ class ControllerExtensionPaymentPaysto extends Controller {
         );
 
         $data['action'] = $this->url->link('extension/payment/paysto', 'token=' . $this->session->data['token'], true);
-        
+
         $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true);
-        
+
 
         if (isset($this->request->post['paysto_x_login'])) {
             $data['paysto_x_login'] = $this->request->post['paysto_x_login'];
@@ -85,14 +118,36 @@ class ControllerExtensionPaymentPaysto extends Controller {
         } else {
             $data['paysto_secret_key'] = $this->config->get('paysto_secret_key');
         }
-        
+
+        if (isset($this->request->post['paysto_description'])) {
+            $data['paysto_description'] = $this->request->post['paysto_description'];
+        } else {
+            $data['paysto_description'] = $this->config->get('paysto_description');
+        }
+
+        if (isset($this->request->post['paysto_useOnlyList'])) {
+            $data['paysto_useOnlyList'] = $this->request->post['paysto_useOnlyList'];
+        } else {
+            $data['paysto_useOnlyList'] = $this->config->get('paysto_useOnlyList');
+        }
+
+        if (isset($this->request->post['paysto_serversList'])) {
+            $data['paysto_serversList'] = $this->request->post['paysto_serversList'];
+        } else {
+            if (!$this->config->get('paysto_serversList')) {
+                $data['paysto_serversList'] = implode("\n", $this->defaultServers);
+            } else {
+                $data['paysto_serversList'] = $this->config->get('paysto_serversList');
+            }
+        }
+
         if (isset($this->request->post['paysto_order_status_id'])) {
             $data['paysto_order_status_id'] = $this->request->post['paysto_order_status_id'];
         } else {
             $data['paysto_order_status_id'] = $this->config->get('paysto_order_status_id');
         }
 
-	      $this->load->model('localisation/order_status');
+        $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         if (isset($this->request->post['paysto_geo_zone_id'])) {
@@ -156,25 +211,30 @@ class ControllerExtensionPaymentPaysto extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('extension/payment/paysto.tpl', $data));
-	}
+    }
 
-	private function validate() {
-      if (!$this->user->hasPermission('modify', 'extension/payment/paysto')) {
-          $this->error['warning'] = $this->language->get('error_permission');
-      }
+    private function validate()
+    {
+        if (!$this->user->hasPermission('modify', 'extension/payment/paysto')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
 
-      if (!$this->request->post['paysto_x_login']) {
-          $this->error['x_login'] = $this->language->get('error_x_login');
-      }
+        if (!$this->request->post['paysto_x_login']) {
+            $this->error['x_login'] = $this->language->get('error_x_login');
+        }
 
-      if (!$this->request->post['paysto_secret_key']) {
-          $this->error['secret_key'] = $this->language->get('error_secret_key');
-      }
+        if (!$this->request->post['paysto_secret_key']) {
+            $this->error['secret_key'] = $this->language->get('error_secret_key');
+        }
 
-      if (!$this->error) {
-          return TRUE;
-      } else {
-          return FALSE;
-      }
-	}
+        if (!$this->request->post['paysto_description']) {
+            $this->error['description'] = $this->language->get('error_description');
+        }
+
+        if (!$this->error) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 }
