@@ -12,9 +12,9 @@ class ControllerExtensionPaymentPaysto extends Controller
     const BEGIN_POS_IN_CHECK = 0;
 
 
-    public function __construct($arg)
+    public function __construct($registry)
     {
-        parent::__construct($arg);
+        parent::__construct($registry);
         // Set payment servers from Paysto
         $this->PaystoServers = preg_split('/\r\n|[\r\n]/', $this->config->get('paysto_serversList'));
     }
