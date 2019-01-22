@@ -1,11 +1,11 @@
 <?php
 // Heading
-$_['heading_title']     = 'Paysto.ru';
+$_['heading_title']     = 'Paysto';
 
 // Text
 $_['text_payment']      = 'Payment';
 $_['text_success']      = 'Module configuration updated!';
-$_['text_paysto']    = '<a onclick="window.open(\'http://paysto.ru\');"><img src="view/image/payment/paysto.png" alt="Paysto.ru" title="Paysto.ru" style="width:30%" /></a>';
+$_['text_paysto']    = '<a onclick="window.open(\'http://paysto.ru\');"><img src="view/image/payment/paysto.png" alt="Paysto" title="Paysto" style="width:30%" /></a>';
 $_['text_url_suc']  	= 'Success URL:';
 $_['text_url_res'] 		= 'Result URL:';
 $_['text_url_fail'] 	= 'Fail URL:';
