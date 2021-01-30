@@ -1,13 +1,11 @@
-**Модуль оплаты для системы Paysto и OpenCart 2.3**
+Payment module for Paysto and OpenCart 2.3
 
-В предыдущей версии модуля создавались заказы, но не подтверждались так как неправильно расчитывалась подпись.
-Также улучшена производительность и добавлен новый функционал. 
-Все инструцкии по установке читайте во вложенном файле instruction.docx
+ Orders were created in the previous version of the module, but were not confirmed as the signature was incorrectly calculated.  Also improved performance and added new functionality.  Read all installation tools in the Instruction.docx file.
 
-Хотим обратить внимание, что модуль только для ветки Opencart 2.3, для других веток и версий - свои модули. 
+ We want to pay attention to that the module is only for the OpenCart 2.3 branch, for other branches and versions - their modules.
 
-Если в результате инсталяции и проведения платежной транзакции возникает ошибка:
+ If an error occurs as a result of installing and holding a payment transaction:
 
-_Warning: fsockopen() expects parameter 2 to be long, string given in /..../system/library/mail.php on line 167_ 
+ Warning: FSOCKOPEN () EXPECTS PARAMETER 2 TO BE LONG, STRING GIVEN IN /..../SYSTEM/LIBRARY/mail.php on line 167
 
-Это обозначет то, что вам необходимо прописать все параметры настройки почты (sendmail или smtp). 
+ This denotes what you need to register all mail settings (Sendmail or SMTP).
